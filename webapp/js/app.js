@@ -19027,10 +19027,12 @@ module.exports = warning;
 });
 
 require.register("app", function(exports, require, module) {
-var button = require('./button');
+var layout = require('./layout');
+var comp = React.renderComponent(layout(), document.getElementById('container'))
+
 });
 
-require.register("auto-reload", function(exports, require, module) {
+;require.register("auto-reload", function(exports, require, module) {
 (function() {
   var WebSocket = window.WebSocket || window.MozWebSocket;
   var br = window.brunch = (window.brunch || {});
@@ -19085,14 +19087,40 @@ require.register("auto-reload", function(exports, require, module) {
 require.register("button", function(exports, require, module) {
 /** @jsx React.DOM */
 module.exports = React.createClass({displayName: 'exports',
+  getInitialState: function(){
+    return {
+      value: this.props.count
+    }
+  },
+  handleClick: function(){
+    this.setState({value:this.state.value+1});
+  },
   render: function(){
-    return React.DOM.div(null, React.DOM.a( {className:"btn btn-success"}, "Test"))
+    return React.DOM.div(null, this.state.value,React.DOM.a( {className:"btn btn-success", onClick:this.handleClick}, "Test"))
   }
 })
 
 });
 
-;require.register("test", function(exports, require, module) {
+;require.register("layout", function(exports, require, module) {
+/** @jsx React.DOM */
+var Button = require('./button');
+var count;
+module.exports = React.createClass({displayName: 'exports',
+  getInitialState:function(){
+    return {value: 10};
+  },
+  doSmth: function(){
+    count
+  },
+  render: function(){
+    return React.DOM.div( {className:"container"}, Button( {count:this.state.value, onActionClick: this.doSmth}));
+  }
+});
+
+});
+
+require.register("test", function(exports, require, module) {
 /** @jsx React.DOM */
 var f = React.DOM.div(null, "Test");
 });
